@@ -1,4 +1,4 @@
-.\" Auto generated Nroff by NroffEdit on September 8, 2014
+.\" Generated Nroff by NroffEdit
 .pl 10.0i
 .po 0
 .ll 7.2i
@@ -8,7 +8,7 @@
 .ds LF Leonard
 .ds RF FORMFEED[Page %]
 .ds LH Internet-Draft
-.ds RH March 21, 2016
+.ds RH June XX, 2016
 .ds CH Regular Expressions for Internet Mail
 .ds CF Best Current Practice
 .hy 0
@@ -19,15 +19,18 @@
 .nf
 .tl 'Network Working Group''S. Leonard'
 .tl 'Internet-Draft''Penango, Inc.'
-.tl 'Intended Status: Best Current Practice''March 21, 2016'
-.tl 'Expires: September 22, 2016'''
+.tl 'Intended Status: Best Current Practice''J. Hildebrand'
+.tl 'Expires: December XX, 2016''Cisco Systems'
+.tl '''T. Hansen'
+.tl '''AT&T'
+.tl '''June XX, 2016'
 .fi
 .in 3
 
 
 .ce 3
 Regular Expressions for Internet Mail
-\%draft-seantek-mail-regexen-00
+\%draft-seantek-mail-regexen-01
 
 .ti 0
 Abstract
@@ -51,7 +54,7 @@ Internet-Drafts are working documents of the Internet Engineering Task Force (IE
 
 Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time. It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on September 22, 2016.
+This Internet-Draft will expire on December XX, 2016.
 
 .ti 0
 Copyright Notice
@@ -66,7 +69,7 @@ This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relatin
 Table of Contents
 
 .nf
-   1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  2
+   1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  3
      1.2. Normative Effects . . . . . . . . . . . . . . . . . . . . .  4
      1.3. Definitions . . . . . . . . . . . . . . . . . . . . . . . .  4
    2.  History and Formal Models for Internet Mail Identifiers  . . .  6
@@ -99,7 +102,7 @@ Table of Contents
      9.1.  Normative References . . . . . . . . . . . . . . . . . . . 20
      9.2.  Informative References . . . . . . . . . . . . . . . . . . 23
    Appendix A. Test Vectors . . . . . . . . . . . . . . . . . . . . . 24
-   Author's Address . . . . . . . . . . . . . . . . . . . . . . . . . 24
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 24
 .fi
 .in 3
 
@@ -179,6 +182,7 @@ de-jure or de-facto standards. Where expressions are given, they are annotated
 with single characters that refer to the standards to which they conform.
 [[NB: or, are intended to conform to, after further development.]]
 
+.ks
 .in 6
 1 4       Title                                      Ref
 .br
@@ -198,8 +202,13 @@ E (P)ERE: POSIX Extended Regular Expressions         [POS-ERE]
 J JSRE:   JavaScript Regular Expressions             [JSRE6ED]
 .br
 (ECMAScript/ECMA-262, 6th Ed., 2015)
+.ke
 
 .in 3
+.ks
+[[TODO: Need to do something with UTS #18: Unicode Regular Expressions.]]
+.ke
+
 Implementers should exercising caution when using a library that claims to be "Perl-Compatible"
 without actually being the bona-fide PCRE library: it may exhibit different or incomplete behavior.
 Implementers should also note that ERE and JSRE are fully implemented as alternative grammars
@@ -927,7 +936,7 @@ and validation patterns.
 .nf
 .in 3
 .ti 0
-Author's Address
+Authors' Addresses
 
 Sean Leonard
 Penango, Inc.
@@ -936,5 +945,20 @@ Penango, Inc.
 Los Angeles, CA  90036
 USA
 
-EMail: dev+ietf@seantek.com
+Email: dev+ietf@seantek.com
 URI:   http://www.penango.com/
+
+
+Joe Hildebrand
+Cisco Systems
+
+Email: jhildebr@cisco.com
+
+
+Tony Hansen
+AT&T Laboratories
+200 Laurel Ave South
+Middletown, NJ  07748
+USA
+
+Email: tony@att.com
