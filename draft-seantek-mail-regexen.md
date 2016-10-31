@@ -1,14 +1,14 @@
 ---
 title: Regular Expressions for Internet Mail
-abbrev: mail-regex
+abbrev: mail-regexen
 docname: draft-seantek-mail-regexen-01
-date: 2016-08-08
+date: 2016-10-30
 
 ipr: trust200902
 area: Applications
 wg: apparea
 kw: Internet-Draft
-cat: bcp
+cat: info
 
 coding: us-ascii
 pi:    # can use array (if all yes) or hash here
@@ -24,10 +24,6 @@ author:
         ins: S. Leonard
         name: Sean Leonard
         org: Penango, Inc.
-        # abbrev: TZI
-        # street:
-        # - Postfach 330440
-        # - Bibliothekstr. 1
         street:
             - 5900 Wilshire Boulevard
             - 21st Floor
@@ -396,7 +392,7 @@ Systems that recognize "legacy email addresses" in existing corpa
 (e.g., in email messages or documents predating this document)
 SHALL accept productions that comply with this document.
 
-## Deliverable Email Address
+## Deliverable Email Address {#dea}
 
 A deliverable email address is an email address that can be used
 to deliver messages over the modern SMTP infrastructure. This has
@@ -692,14 +688,47 @@ J /^(?![A-Za-z0-9!#-'*+\-/=?^_`{-~\xA0-\x{10FFFF}]+
 
 ## Modern Email Address
 
-\[\[TODO: expand regular expressions.
-This may include C0 and C1 control characters because we are talking about RFC 822/2822/5322.
-This will definitely include domain-literals.
-The complex rules regarding U-labels might be ignorable.\]\]
+A modern email address is an email address that conforms to {{RFC5322}},
+except for the ABNF productions in that standard that are marked
+as "obsolete". For example, control characters are excluded.
+Modern email addresses are a superset of deliverable email addresses {{RFC5321}}.
+Since modern email addresses are not necessarily deliverable by SMTP,
+the domain production does not need to conform to DNS rules. This
+relaxation makes the regular expressions much simpler. On the other hand,
+modern email addresses permit embedded comments and folding whitespace,
+requiring the use of a pushdown automaton.
 
-\[\[TODO: deal with FWS, CFWS. Note that CFWS requires a pushdown automaton, which
-a truly "regular" expression cannot handle. Need recursive
-subroutines such as (?1) syntax, or backreference (\\1) syntax.\]\]
+~~~~
+(?(DEFINE)
+ (?#whitespace)
+ (?<FWS>(?:[\t ]*\r\n)?[\t ]+)
+ (?<CFWS>(?:(?&FWS)?(?&comment))+(?&FWS)?|(?&FWS))
+ (?#local)
+ (?<atext>[0-9A-Za-z!#-'*+\\-/=?^_`{-~])
+ (?<dot_atom_text>(?&atext)+(?:\\.(?&atext)+)*)
+ (?<ctext>[!-'*-\\[\\]-~])
+ (?<ccontent>(?&ctext)|(?&quoted_pair)|(?&comment))
+ (?<comment>\((?:(?&FWS)?(?&ccontent))*(?&FWS)?\))
+ (?<qtext>[ !#-\\[\\]-~])
+ (?<quoted_pair>\\\\[ -~])
+ (?<qcontent>(?&qtext)|(?&quoted_pair))
+ (?<quoted_string>(?&CFWS)?"(?:(?&FWS)?(?&qcontent))*(?&FWS)?"(?&CFWS)?)
+ (?<local_part>(?&CFWS)?(?&dot_atom_text)(?&CFWS)?|(?&quoted_string))
+ (?#domain)
+ (?<dtext>[!-Z^-~])
+ (?<domain>(?&CFWS)?(?:(?&dot_atom_text)|
+  \\[(?:(?&FWS)?(?&dtext))*(?&FWS)?\\])(?&CFWS)?)
+)
+~~~~
+
+A modern email address matches the \<addr-spec\> production of {{RFC5322}},
+without any obsolete parts.
+
+~~~~
+(?&local_part)@(?&domain)
+
+^(?&local_part)@(?&domain)$
+~~~~
 
 ## Legacy Email Address
 
@@ -735,17 +764,48 @@ just a coincidence.
 
 The productions that comprise Message-ID are called id-left and id-right.
 
-\[\[NB: This section remains to be written. What follows are pointers.\]\]
+## Modern Message-ID
 
-A "modern Message-ID" is one that complies with the strict generation rules of {{!RFC5322}}.
-In particular: id-left is only dot-atom-text (as amended by {{!RFC6532}}, and id-right is dot-atom-text or no-fold-literal (as amended by {{!RFC6532}}).
+A modern Message-ID is one that complies with the strict generation
+rules of {{!RFC5322}}.
+In particular: id-left is only dot-atom-text (as amended by {{!RFC6532}}, and
+id-right is dot-atom-text or no-fold-literal (as amended by {{!RFC6532}}).
 Notably, virtually any Unicode scalar value is permissible in id-right, because
 {{!RFC6532}} does not import U-label (unlike {{!RFC6531}}). The resulting regular expressions
 will therefore be more expansive, at the cost of accepting characters,
 such as fullwidth punctuation, that would otherwise delimit Message-IDs
 on both ends in text.
 
+The regular expressions reuse many of the subroutines of {{dea}}.
+\[\[POINTER: obs-id-left and obs-id-right are supersets of their modern forms,
+so deliverable email address regular expressions may well be reused directly.\]\]
+
+~~~~
+(?(DEFINE)
+ (?#id-left)
+ (?<atext>[0-9A-Za-z!#-'*+\\-/=?^_`{-~])
+ (?<dot_atom_text>(?&atext)+(?:\\.(?&atext)+)*)
+ (?<id_left>(?&dot_atom_text))
+ (?#id-right)
+ (?<dtext>[!-Z^-~])
+ (?<id_right>(?&dot_atom_text)|\\[(?&dtext)*\\])
+)
+~~~~
+
+A modern Message-ID matches the \<addr-spec\> production of {{RFC5322}},
+without any obsolete parts.
+
+~~~~
+(?&id_left)@(?&id_right)
+
+^(?&id_left)@(?&id_right)$
+~~~~
+
+## General Message-ID
+
 A "general Message-ID" is one that complies with any of the mail rules.
+
+\[\[TODO: complete.\]\]
 
 # Security Considerations
 
@@ -757,7 +817,11 @@ systems conflate the two. Systems that accept email addresses as login tokens
 accept the full range of valid email addresses. To do otherwise is to act
 as a denial of service against legitimate users with legitimate mailbox names.
 
-When a user forgets his or her password or other login credentials, the most common recovery method on the Internet is to send a recovery message to the user's registered \[\[email address\]\]. Preventing users from using their chosen or assigned addresses acts as a denial of service.
+When a user forgets his or her password or other login credentials,
+the most common recovery method on the Internet is to send a recovery
+message to the user's registered \[\[email address\]\]. Preventing
+users from using their chosen or assigned addresses acts as a denial
+of service.
 
 Because a local-part can contain almost any Unicode scalar value, security issues
 are essentially pushed from clients to servers
