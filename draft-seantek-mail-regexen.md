@@ -411,19 +411,19 @@ All expressions are PCRE2-compatible.
 ~~~~
 (?(DEFINE)
  (?#local)
- (?<atext>[0-9A-Za-z!#-'*+\\-/=?^_`{-~])
- (?<dot_string>(?&atext)+(?:\\.(?&atext)+)*)
- (?<qtext>[ !#-\\[\\]-~])
- (?<quoted_pair>\\\\[ -~])
+ (?<atext>[0-9A-Za-z!#-'*+\-/=?^_`{-~])
+ (?<dot_string>(?&atext)+(?:\.(?&atext)+)*)
+ (?<qtext>[ !#-\[\]-~])
+ (?<quoted_pair>\\[ -~])
  (?<qcontent>(?&qtext)|(?&quoted_pair))
  (?<quoted_string>"(?&qcontent)*")
  (?<local_part>(?&dot_string)|(?&quoted_string))
  (?#domain)
  (?<oct>0*(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?))
- (?<IPv4>(?&oct)(?:\\.(?&oct)){0,3})
- (?<sub_domain>[0-9A-Za-z](?:[\\-0-9A-Za-z]{0,61}[0-9A-Za-z])?)
- (?<domain>(?!(?&IPv4)[^\\-.0-9A-Za-z])(?&sub_domain)
-  (?:\\.(?&sub_domain))*(?![\\-.0-9A-Za-z]))
+ (?<IPv4>(?&oct)(?:\.(?&oct)){0,3})
+ (?<sub_domain>[0-9A-Za-z](?:[\-0-9A-Za-z]{0,61}[0-9A-Za-z])?)
+ (?<domain>(?!(?&IPv4)[^\-.0-9A-Za-z])(?&sub_domain)
+  (?:\\.(?&sub_domain))*(?![\-.0-9A-Za-z]))
 )
 ~~~~
 
@@ -435,11 +435,11 @@ of {{!RFC5321}}.
 ~~~~
 (?&local_part)@(?&domain)
 
-(?&local_part)@(?&domain)(?<![\\-.0-9A-Za-z]{254})
+(?&local_part)@(?&domain)(?<![\-.0-9A-Za-z]{254})
 
 ^(?&local_part)@(?&domain)$
 
-^(?&local_part)@(?&domain)(?<![\\-.0-9A-Za-z]{254})$
+^(?&local_part)@(?&domain)(?<![\-.0-9A-Za-z]{254})$
 ~~~~
 
 The aforementioned patterns take into account the limitations
@@ -706,20 +706,20 @@ requiring the use of a pushdown automaton.
  (?<FWS>(?:[\t ]*\r\n)?[\t ]+)
  (?<CFWS>(?:(?&FWS)?(?&comment))+(?&FWS)?|(?&FWS))
  (?#local)
- (?<atext>[0-9A-Za-z!#-'*+\\-/=?^_`{-~])
- (?<dot_atom_text>(?&atext)+(?:\\.(?&atext)+)*)
- (?<ctext>[!-'*-\\[\\]-~])
+ (?<atext>[0-9A-Za-z!#-'*+\-/=?^_`{-~])
+ (?<dot_atom_text>(?&atext)+(?:\.(?&atext)+)*)
+ (?<ctext>[!-'*-\[\]-~])
  (?<ccontent>(?&ctext)|(?&quoted_pair)|(?&comment))
  (?<comment>\((?:(?&FWS)?(?&ccontent))*(?&FWS)?\))
- (?<qtext>[ !#-\\[\\]-~])
- (?<quoted_pair>\\\\[ -~])
+ (?<qtext>[ !#-\[\]-~])
+ (?<quoted_pair>\\[ -~])
  (?<qcontent>(?&qtext)|(?&quoted_pair))
  (?<quoted_string>(?&CFWS)?"(?:(?&FWS)?(?&qcontent))*(?&FWS)?"(?&CFWS)?)
  (?<local_part>(?&CFWS)?(?&dot_atom_text)(?&CFWS)?|(?&quoted_string))
  (?#domain)
  (?<dtext>[!-Z^-~])
  (?<domain>(?&CFWS)?(?:(?&dot_atom_text)|
-  \\[(?:(?&FWS)?(?&dtext))*(?&FWS)?\\])(?&CFWS)?)
+  \[(?:(?&FWS)?(?&dtext))*(?&FWS)?\])(?&CFWS)?)
 )
 ~~~~
 
@@ -785,12 +785,12 @@ so deliverable email address regular expressions may well be reused directly.\]\
 ~~~~
 (?(DEFINE)
  (?#id-left)
- (?<atext>[0-9A-Za-z!#-'*+\\-/=?^_`{-~])
- (?<dot_atom_text>(?&atext)+(?:\\.(?&atext)+)*)
+ (?<atext>[0-9A-Za-z!#-'*+\-/=?^_`{-~])
+ (?<dot_atom_text>(?&atext)+(?:\.(?&atext)+)*)
  (?<id_left>(?&dot_atom_text))
  (?#id-right)
  (?<dtext>[!-Z^-~])
- (?<id_right>(?&dot_atom_text)|\\[(?&dtext)*\\])
+ (?<id_right>(?&dot_atom_text)|\[(?&dtext)*\])
 )
 ~~~~
 
@@ -873,3 +873,4 @@ particular regular expression forms.
 
 This appendix will include a large set of test vectors to test matching
 and validation patterns.
+
