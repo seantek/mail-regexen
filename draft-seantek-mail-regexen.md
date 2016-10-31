@@ -5,8 +5,8 @@ docname: draft-seantek-mail-regexen-01
 date: 2016-10-30
 
 ipr: trust200902
-area: Applications
-wg: apparea
+area: ART
+wg: Network Working Group
 kw: Internet-Draft
 cat: info
 
@@ -28,6 +28,7 @@ author:
             - 5900 Wilshire Boulevard
             - 21st Floor
         city: Los Angeles
+        region: CA
         code: 90036
         country: USA
         email: dev+ietf@seantek.com
@@ -77,9 +78,8 @@ normative:
     UNICODE:
         author: 
             org: The Unicode Consortium
-        title: The Unicode Standard, Version 8.0.0
-        seriesinfo: The Unicode Consortium
-        date: August 2015
+        title: The Unicode Standard, Version 9.0.0
+        date: August 2016
 
 informative:
     MTECHDEV:
@@ -206,7 +206,13 @@ The main {{!RFC0821}} production for an email address is the \<mailbox\>, which 
 
 {{!RFC0822}} introduced the "addr-spec" ABNF production, which is that series' term for an email address. While a {{!RFC0822}} route-addr production can include a source route (aka forward-path with multiple hosts), addr-spec is noted to be global address, with the right side being a "domain" production. This definition presaged the first DNS standards {{?RFC0882}} and {{?RFC0883}}, although it was clearly designed with DNS in mind. The {{!RFC0822}} ABNF permits a domain to include multiple domain-literal productions (i.e., bracketed) separated by "."; however, the accompanying text basically obviates such productions. As {{!RFC0822}} presaged the widespread implementation of DNS, various systems would spread routing information between the local-part and domain productions (see Section 6.2.5). {{!RFC0822}} discusses local-part syntax extensively, including examples of comment productions that are supposed to be ignored semantically (see Section A.1).
 
-Section 3.4.7 of {{!RFC0822}} describes the constituent components of an address as requiring "preservation of case information", which is slightly different than saying "case-sensitive" outright (although the latter is strongly implied). The main historical point to glean is that intermediate mail systems were supposed to transit the local-part AS-IS without modification, so that the destination system -- and only the destination system -- would parse it.
+Section 3.4.7 of {{!RFC0822}} describes the constituent components
+of an address as requiring "preservation of case information", which
+is slightly different than saying "case-sensitive" outright (although
+the latter is strongly implied). The main historical point to glean is that
+intermediate mail systems were supposed to transit the local-part AS-IS without
+modification, so that the destination system&mdash;and only the
+destination system&mdash;would parse it.
 
 {{!RFC0822}} assigns specific semantics to Message-ID but is light on syntax: the msg-id production is just addr-spec enclosed in mandatory "\<" and "\>".
 
@@ -259,24 +265,20 @@ An email address is comprised of a local-part and a domain, separated by "@". Th
 Conveniently, the domain string subtypes can be combined into a
 single well-formed Unicode string, discriminated as follows:
 
-3. If the string begins with "IPv6:", it is a type 3 IPv6 address,
+1. If the string begins with "IPv6:", it is a type 3 IPv6 address,
    and the remainder had better be a valid IPv6 address in
    textual form.
-
-\4. If the string begins with Ldh-str and a colon ":", it is a
+1. If the string begins with Ldh-str and a colon ":", it is a
    type 4 address literal, and the remainder had better be
    dcontent (which notably is not supposed to contain characters
    beyond ASCII).
-
-\2. If the string has four sets of digits 0-255
+1. If the string has four sets of digits 0-255
    separated by dots, then it is an IPv4 address.
-
-\1. Otherwise, it had better be a domain name (i.e., comprised of
+1. Otherwise, it had better be a domain name (i.e., comprised of
    NR-LDH labels and U-labels, separated by dots).
    \[\[NB: {{?RFC1912}} says a label can't be all-numeric, but
    then it catalogs some exceptions.\]\]
-
-\0. Finally, it is "some random Unicode string" that is
+1. Finally, it is "some random Unicode string" that is
    syntactically valid under the most expansive rules,
    but is not useful for delivering or reporting on Internet mail.
 
