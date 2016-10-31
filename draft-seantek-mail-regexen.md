@@ -123,9 +123,29 @@ replacing current ad-hoc (and oftentimes atrociously inconsistent) approaches wi
 
 ## Normative Effects
 
-This document is proposed as a Best Current Practice {{?RFC1818}} for all users and systems of Internet Mail identifiers, which basically means everyone connected to the Internet, other than the mail infrastructure itself. The Internet Mail infrastructure has been standardized (and continues to be standardized by) other documents, most notably {{!RFC5321}} and {{!RFC5322}}. Therefore, implementers developing mail systems MUST rely on those standards when building interoperable mail systems. At the same time, the text of this specification has been \[\[NB: will be\]\] carefully vetted by \[\[the IETF\]\] so that implementers SHALL be able to rely on it as a normative reference. Whether designing a new standard or implementing a new system that uses Internet Mail identifiers for some other purpose (e.g., as usernames, security principals, or keys in a database), relying parties can "copy-and-paste" the expressions in this document to parse, validate, compose, and process Internet Mail identifiers, rather than relying on homegrown solutions.
+This document is proposed with either Informational or
+Best Current Practice status {{?RFC1818}} for all users
+and systems of Internet Mail identifiers, which basically
+means everyone connected to the Internet, other than the
+mail infrastructure itself. The Internet Mail infrastructure
+has been standardized (and continues to be standardized by) other
+documents, most notably {{!RFC5321}} and {{!RFC5322}}. Therefore,
+implementers developing mail systems MUST rely on those standards
+when building interoperable mail systems. At the same time, the text
+of this specification has been \[\[NB: will be\]\] carefully vetted
+by \[\[the IETF\]\] so that implementers SHALL be able to rely on it
+as a normative reference. Whether designing a new standard or
+implementing a new system that uses Internet Mail identifiers for some
+other purpose (e.g., as usernames, security principals, or keys in a
+database), relying parties can "copy-and-paste" the expressions in this
+document to parse, validate, compose, and process Internet Mail
+identifiers, rather than relying on homegrown solutions.
 
-Internet Mail has evolved over forty years, and will undoubtedly continue to evolve over time. This document does not constrain that development process. Actually, it is expected that expressions in this document will be updated to match changes in Internet Mail.
+Internet Mail has evolved over forty years, and will undoubtedly
+continue to evolve over time. This document does not constrain
+that development process. Actually, it is expected that
+expressions in this document will be updated to match
+changes in Internet Mail.
 
 ## Definitions
 
@@ -861,16 +881,29 @@ library that an implementation depends on. Implementers should therefore
 evaluate their own needs for security and stability in picking
 particular regular expression forms.
 
-# Acknowledgements
-
-\[\[TODO: add acknowledgements\]\].
-
 --- back
 
 # Test Vectors
 
-\[\[NB: Left in as a placeholder.\]\]
+\[\[NB: This appendix will include a large set of test vectors to test matching
+and validation patterns.\]\]
 
-This appendix will include a large set of test vectors to test matching
-and validation patterns.
+# Change Log
 
+The document status is now marked as Informational
+instead of Best Current Practice
+(although it seems that it could go either way).
+
+The authors decided
+to focus on "modern" ASCII-only email identifiers first and to get those
+right before tackling Unicode email identifiers and "obsolete" ABNF productions. This
+draft-01 preserves the main text of draft-00 rather
+than remove potentially useful text. Deliverable and
+modern email addresses, and modern Message-IDs, have been addressed. The Unicode work
+remains unfinished for now; "obsolete" ABNF productions
+(which are still useful for archival applications) will also be addressed in future drafts.
+
+The authors decided to write one set of regular expressions in
+one dialect (namely, PCRE/PCRE2) before tackling others
+(e.g., JavaScript). Different dialects will be
+addressed in future drafts.
