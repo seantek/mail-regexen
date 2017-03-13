@@ -1,8 +1,8 @@
 ---
 title: Regular Expressions for Internet Mail
 abbrev: mail-regexen
-docname: draft-seantek-mail-regexen-01
-date: 2016-10-30
+docname: draft-seantek-mail-regexen-02
+date: 2017-03-13
 
 ipr: trust200902
 area: ART
@@ -889,6 +889,8 @@ particular regular expression forms.
 and validation patterns.\]\]
 
 # Change Log
+
+Draft-02 just updates the date to keep the document active.
 
 The document status is now marked as Informational
 instead of Best Current Practice
